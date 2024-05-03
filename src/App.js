@@ -1,24 +1,43 @@
 import logo from './logo.svg';
-import './App.css';
+import './styles/index.scss';
+import {
+  BrowserRouter,
+  Route,
+  Router,
+  RouterProvider,
+  Routes,
+  createBrowserRouter,
+} from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import Login from './views/pages/login';
+import Dashboard from './views/pages/dashboards/home/index';
+import ErrorPage from './views/pages/error/error-page';
+import Contact from './views/pages/dashboards/contact/Contact';
+import SideBar from './components/layout/sidebar';
+import { persistor, store } from './redux/store';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Provider store={store}>
+      <PersistGate loading={<div>1</div>} persistor={persistor}>
+        <BrowserRouter>
+          <Routes>
+            <Route path='*' element={<ErrorPage />} />
+            <Route path='/' element={<Login />} />
+            <Route
+              path='/home'
+              element={
+                <SideBar>
+                  <Dashboard />
+                </SideBar>
+              }
+            />
+            <Route path='/home/contact' element={<Contact />} />
+          </Routes>
+        </BrowserRouter>
+      </PersistGate>
+    </Provider>
   );
 }
 
